@@ -3,7 +3,7 @@ import certifi
 from flask import Flask, jsonify, request
 import os
 
-app = Flask(_name_)
+app = Flask(__name__)
 
 def getConection():
     return pytds.connect(
