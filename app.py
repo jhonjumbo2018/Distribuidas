@@ -5,7 +5,7 @@ import os
 
 app = Flask(__name__)
 
-def getConection():
+def getConnection():
     return pytds.connect(
         server = os.environ["DB_SERVER"],
         database = os.environ["DB_DATABASE"],
