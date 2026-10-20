@@ -13,7 +13,8 @@ def getConnection():
         password = os.environ["DB_PASS"],
         port = 1433,
         cafile = certifi.where(),
-        validate_host = True
+        validate_host = True,
+        row_strategy = pytds.rows.dict_row,
     )
 
 @app.route('/test-db', methods=['GET'])
