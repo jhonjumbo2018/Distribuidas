@@ -1,5 +1,6 @@
 import pytds
 import certifi
+import requests
 from flask import Flask, jsonify, request
 import os
 
@@ -232,6 +233,34 @@ def update_version():
     except Exception as e:
         return jsonify({"msg": "Error al actualizar", "error": str(e)}), 500
 
+@app.route('/api/send-email', methods=['POST'])
+def send_email():
+    try:
+        url = "https://api.brevo.com/v3/smtp/email"
+        
+        headers = {
+            "accept": "application/json",
+            "api-key": os.environ["BREVO_API_KEY"],
+            "content-type": "application/json"
+        }
+        
+        # ATENCIÓN: El "email" del sender DEBE ser tu correo registrado en Brevo
+        payload = {
+            "sender": {"name": "Mi Sitio Web", "email": "9da17e001@smtp-brevo.com"},
+            "to": [{"email": "shinjilouch@gmail.com", "name": "Admin"}],
+            "subject": "Nueva notificación desde WordPress",
+            "htmlContent": "<html><body><h1>¡Han presionado el botón en la web!</h1><p>Revisa tu sistema.</p></body></html>"
+        }
+        
+        response = requests.post(url, json=payload, headers=headers)
+        
+        if response.status_code in [200, 201]:
+            return jsonify({"message": "Correo enviado con éxito"}), 200
+        else:
+            return jsonify({"message": "Error en Brevo", "detalle": response.json()}), 400
+            
+    except Exception as e:
+        return jsonify({"message": "Error interno al enviar correo", "error": str(e)}), 500
 if __name__ == '__main__':
     app.run(
         host='0.0.0.0', port=5000, debug=True
