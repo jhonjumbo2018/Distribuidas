@@ -14,7 +14,7 @@ def getConnection():
         port = 1433,
         cafile = certifi.where(),
         validate_host = True,
-        row_strategy = pytds.rows.dict_row,
+        row_strategy = pytds.namedtuple_row_strategy,
     )
 
 @app.route('/test-db', methods=['GET'])
