@@ -5,3 +5,4 @@ pyOpenSSL==24.2.1
 certifi==2024.7.4
 requests==2.34.0
 cryptography==43.0.1
+Flask-Cors==4.2.2

@@ -1,11 +1,12 @@
 import pytds
 import certifi
 import requests
+from flask_cors import CORS
 from flask import Flask, jsonify, request
 import os
 
 app = Flask(__name__)
-
+CORS(app)
 def getConnection():
     return pytds.connect(
         server = os.environ["DB_SERVER"],
