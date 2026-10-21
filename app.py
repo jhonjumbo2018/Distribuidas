@@ -245,12 +245,11 @@ def send_email():
             "content-type": "application/json"
         }
         
-        # ATENCIÓN: El "email" del sender DEBE ser tu correo registrado en Brevo
         payload = {
-            "sender": {"name": "Mi Sitio Web", "email": "9da17e001@smtp-brevo.com"},
+            "sender": {"name": "Mi Sitio Web", "email": "jhonfrancisjumbo@gmail.com"},
             "to": [{"email": "shinjilouch@gmail.com", "name": "Admin"}],
             "subject": "Nueva notificación desde WordPress",
-            "htmlContent": "<html><body><h1>¡Han presionado el botón en la web!</h1><p>Revisa tu sistema.</p></body></html>"
+            "htmlContent": "<html><body><h1>¡Se ha presionado el botón en la web!</h1><p>Revisa tu sistema.</p></body></html>"
         }
         
         response = requests.post(url, json=payload, headers=headers)
