@@ -237,6 +237,21 @@ def update_version():
 @app.route('/api/send-email', methods=['POST'])
 def send_email():
     try:
+        conn = getConnection()
+        cursor = conn.cursor()
+        cursor.execute("SELECT id, names, price, stock from vw_Products")
+        
+        html_productos = "<table border='1' cellpadding='8' style='border-collapse: collapse; width: 100%;'>"
+        html_productos += "<tr style='background-color: #f2f2f2;'><th>ID</th><th>Nombre</th><th>Precio</th><th>Stock</th></tr>"
+        
+        for row in cursor.fetchall():
+            html_productos += f"<tr><td>{row[0]}</td><td>{row[1]}</td><td>${row[2]}</td><td>{row[3]}</td></tr>"
+        
+        html_productos += "</table>"
+        
+        cursor.close()
+        conn.close()
+
         url = "https://api.brevo.com/v3/smtp/email"
         
         headers = {
@@ -246,21 +261,25 @@ def send_email():
         }
         
         payload = {
-            "sender": {"name": "Mi Sitio Web", "email": "jhonfrancisjumbo@gmail.com"},
+            "sender": {
+                "name": "Mi Sitio Web", 
+                "email": "jhonfrancisjumbo@gmail.com"
+            },
             "to": [{"email": "shinjilouch@gmail.com", "name": "Admin"}],
-            "subject": "Nueva notificación desde WordPress",
-            "htmlContent": "<html><body><h1>¡Se ha presionado el botón en la web!</h1><p>Revisa tu sistema.</p></body></html>"
+            "subject": "Reporte de Productos",
+            "htmlContent": f"<html><body><h1>Lista Actual de Productos</h1><p>Aquí tienes el reporte solicitado desde la web:</p><br>{html_productos}</body></html>"
         }
         
         response = requests.post(url, json=payload, headers=headers)
         
         if response.status_code in [200, 201]:
-            return jsonify({"message": "Correo enviado con éxito"}), 200
+            return jsonify({"message": "Correo con productos enviado con éxito"}), 200
         else:
             return jsonify({"message": "Error en Brevo", "detalle": response.json()}), 400
             
     except Exception as e:
         return jsonify({"message": "Error interno al enviar correo", "error": str(e)}), 500
+
 if __name__ == '__main__':
     app.run(
         host='0.0.0.0', port=5000, debug=True
