@@ -245,7 +245,7 @@ def send_email():
         html_productos += "<tr style='background-color: #f2f2f2;'><th>ID</th><th>Nombre</th><th>Precio</th><th>Stock</th></tr>"
         
         for row in cursor.fetchall():
-            html_productos += f"</td><td>{row[1]}</td><td>${row[2]}</td><td>{row[3]}</td></tr>"
+            html_productos += f"<tr><td>{row[0]}</td><td>{row[1]}</td><td>${row[2]}</td></tr>"
         
         html_productos += "</table>"
         
