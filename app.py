@@ -242,7 +242,7 @@ def send_email():
         cursor.execute("SELECT id, names, price, stock from vw_Products")
         
         html_productos = "<table border='1' cellpadding='8' style='border-collapse: collapse; width: 100%;'>"
-        html_productos += "<tr style='background-color: #f2f2f2;'><th>ID</th><th>Nombre</th><th>Precio</th><th>Stock</th></tr>"
+        html_productos += "<tr style='background-color: #f2f2f2;'><th>Nombre</th><th>Precio</th><th>Stock</th></tr>"
         
         for row in cursor.fetchall():
             html_productos += f"</tr><td>{row[1]}</td><td>${row[2]}</td><td>{row[3]}</td></tr>"
