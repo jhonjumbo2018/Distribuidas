@@ -245,7 +245,7 @@ def send_email():
         html_productos += "<tr style='background-color: #f2f2f2;'><th>ID</th><th>Nombre</th><th>Precio</th><th>Stock</th></tr>"
         
         for row in cursor.fetchall():
-            html_productos += f"<tr><td>{row[0]}</td><td>{row[1]}</td><td>${row[2]}</td><td>{row[3]}</td></tr>"
+            html_productos += f"</td><td>{row[1]}</td><td>${row[2]}</td><td>{row[3]}</td></tr>"
         
         html_productos += "</table>"
         
@@ -263,9 +263,9 @@ def send_email():
         payload = {
             "sender": {
                 "name": "Mi Sitio Web", 
-                "email": "jhonfrancisjumbo@gmail.com"
+                "email": os.environ["BREVO_SENDER_EMAIL"]
             },
-            "to": [{"email": "shinjilouch@gmail.com", "name": "Admin"}],
+            "to": [{"email": os.environ["DESTINATION_EMAIL"], "name": "Admin"}],
             "subject": "Reporte de Productos",
             "htmlContent": f"<html><body><h1>Lista Actual de Productos</h1><p>Aquí tienes el reporte solicitado desde la web:</p><br>{html_productos}</body></html>"
         }
