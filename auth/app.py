@@ -56,6 +56,7 @@ def obtener_token():
 
     return jsonify({
         "token": token_actual,
+        "usuario": usuario,
         "expiracion": expiracion_token.isoformat() + "Z"
     })
 
