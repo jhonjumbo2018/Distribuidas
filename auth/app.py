@@ -25,7 +25,7 @@ def getConnection():
 def generar_token():
     return secrets.token_urlsafe(32)
 
-@token_bp.route("/token", methods=["POST"])
+@token_bp.route("/api/auth", methods=["POST"])
 def obtener_token():
     global token_actual, expiracion_token
 
