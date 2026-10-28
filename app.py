@@ -4,9 +4,11 @@ import requests
 from flask_cors import CORS
 from flask import Flask, jsonify, request
 import os
+from token.app import token_bp, validar_token
 
 app = Flask(__name__)
 CORS(app)
+app.register_blueprint(token_bp)
 def getConnection():
     return pytds.connect(
         server = os.environ["DB_SERVER"],
@@ -41,6 +43,9 @@ def test_db():
 
 @app.route('/api/products/', methods=['GET'])
 def get_products():
+    if not validar_token():
+        return jsonify({"error": "Token inválido o expirado"}), 401
+
     try:
         conn = getConnection()
         cursor = conn.cursor()
@@ -66,6 +71,9 @@ def get_products():
 
 @app.route('/api/products/<int:id>', methods=['GET'])
 def get_product(id):
+    if not validar_token():
+        return jsonify({"error": "Token inválido o expirado"}), 401
+
     try:
         conn = getConnection()
         cursor = conn.cursor()
@@ -91,6 +99,9 @@ def get_product(id):
 
 @app.route('/api/products/', methods=['POST'])
 def create_product():
+    if not validar_token():
+        return jsonify({"error": "Token inválido o expirado"}), 401
+
     try:
         data = request.get_json()
 
@@ -123,6 +134,9 @@ import time
 
 @app.route("/api/products", methods=['PUT'])
 def update_products():
+        if not validar_token():
+            return jsonify({"error": "Token inválido o expirado"}), 401
+
         try:
             data = request.get_json()
 
@@ -159,6 +173,9 @@ import threading
 product_lock=threading.Lock()
 @app.route("/api/products/lock", methods=['PUT'])
 def update_lock():
+    if not validar_token():
+        return jsonify({"error": "Token inválido o expirado"}), 401
+
     try:
         data = request.get_json()
         if not data:
@@ -192,6 +209,9 @@ def update_lock():
 
 @app.route("/api/products/version", methods=['PUT'])
 def update_version():
+    if not validar_token():
+        return jsonify({"error": "Token inválido o expirado"}), 401
+
     try:
         data = request.get_json()
         if not data:
