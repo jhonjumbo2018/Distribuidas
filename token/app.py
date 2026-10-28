@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Blueprint, request, jsonify
 from flask_cors import CORS
 import secrets
 import pytds
@@ -6,8 +6,7 @@ import certifi
 import os
 from datetime import datetime, timedelta
 
-app = Flask(__name__)
-CORS(app)
+token_bp = Blueprint("token", __name__)
 
 token_actual = None
 expiracion_token = None
@@ -26,7 +25,7 @@ def getConnection():
 def generar_token():
     return secrets.token_urlsafe(32)
 
-@app.route("/token", methods=["POST"])
+@token_bp.route("/token", methods=["POST"])
 def obtener_token():
     global token_actual, expiracion_token
 
@@ -81,19 +80,8 @@ def validar_token():
 
     return True
 
-@app.route("/")
+@token_bp.route("/")
 def inicio():
     return jsonify({
         "mensaje": "Api funcionando correctamente"
     })
-
-@app.route("/datos", methods=["GET"])
-def obtener_datos():
-    if not validar_token():
-        return jsonify({
-            "error": "Token inválido o expirado"
-        }), 401
-    return jsonify({"datos": datos})
-
-if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5001, debug=True)
